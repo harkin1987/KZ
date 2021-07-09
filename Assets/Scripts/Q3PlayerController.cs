@@ -124,8 +124,8 @@ namespace Q3Movement
         {
             if(onSlope && m_Character.velocity.y <= 0)
             {
+                //Lerp the characters position
                 m_Tran.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hitInfo.point.y + height, transform.position.z), 100 * Time.deltaTime);
-                Debug.LogError("Snapping to slope");
             }
         }
 
@@ -191,7 +191,7 @@ namespace Q3Movement
             }
             //var wishdir = new Vector3(m_MoveInput.x, 0, m_MoveInput.z); 
 
-            var wishdir = new Vector3(mouseX, 0, m_MoveInput.z); // Gets the mouse X inputs, zero the forward input
+            var wishdir = new Vector3(mouseX, 0, Mathf.Clamp(m_MoveInput.z, -1, 0)); // Gets the mouse X inputs, zero the forward input
             
             wishdir = m_Tran.TransformDirection(wishdir); // get the local to world space for the players current transform to the requested new position 
             
@@ -239,7 +239,7 @@ namespace Q3Movement
         private void AirControl(Vector3 targetDir /*wishDir*/, float targetSpeed)
         {
             // Only control air movement when moving forward or backward.
-            if (Mathf.Abs(m_MoveInput.z) < 0.001 || Mathf.Abs(targetSpeed) < 0.001)
+            if (Mathf.Abs(m_MoveInput.z) < 0.001 || Mathf.Abs(targetSpeed) < 0.001 || m_MoveInput.z > 0)
             {
                 return;
             }
