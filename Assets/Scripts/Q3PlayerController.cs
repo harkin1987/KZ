@@ -212,7 +212,8 @@ namespace Q3Movement
                 accel = m_AirSettings.Acceleration;
             }
 
-            // If the player is ONLY strafing left or right
+            // If the player is ONLY strafing left or right 
+            // Disabled to make air strafing automatic
             if (true/*m_MoveInput.z == 0 && m_MoveInput.x != 0*/)
             {
                 if (wishspeed > m_StrafeSettings.MaxSpeed)
@@ -238,7 +239,8 @@ namespace Q3Movement
         // to side much faster rather than being 'sluggish' when it comes to cornering.
         private void AirControl(Vector3 targetDir /*wishDir*/, float targetSpeed)
         {
-            // Only control air movement when moving forward or backward.
+            // Only control air movement when moving backward
+            
             if (Mathf.Abs(m_MoveInput.z) < 0.001 || Mathf.Abs(targetSpeed) < 0.001 || m_MoveInput.z > 0)
             {
                 return;
