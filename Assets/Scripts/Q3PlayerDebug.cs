@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Q3Movement
+namespace PlayerMovement
 {
     /// <summary>
     /// This script is used to display real-time statistics to help with tweaking and debugging.
     /// </summary>
-    [RequireComponent(typeof(Q3PlayerController))]
+    [RequireComponent(typeof(PlayerControllerCC))]
     public class Q3PlayerDebug : MonoBehaviour
     {
         [Tooltip("How many times per second to update stats")]
@@ -15,11 +15,11 @@ namespace Q3Movement
         private float m_Time = 0;
         private float m_FPS = 0;
         private float m_TopSpeed = 0;
-        private Q3PlayerController m_Player;
+        private PlayerControllerCC m_Player;
 
         private void Start()
         {
-            m_Player = GetComponent<Q3PlayerController>();
+            m_Player = GetComponent<PlayerControllerCC>();
         }
 
         private void LateUpdate()

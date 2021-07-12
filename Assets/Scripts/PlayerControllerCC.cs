@@ -1,14 +1,34 @@
-﻿using UnityEngine;
+﻿using Tools;
+using UnityEngine;
 using static DebugTools.DebugHelpers;
 
-namespace Q3Movement
+namespace PlayerMovement
 {
     /// <summary>
     /// This script handles Quake III CPM(A) mod style player movement logic.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Q3PlayerController : MonoBehaviour
+    public class PlayerControllerCC : MonoBehaviour, EventListener<GameEvent>
     {
+        /// <summary>
+        /// Event Handling
+        /// </summary>
+
+        public void OnEvent(GameEvent eventType)
+        {
+            //Nothing currently
+        }
+
+        private void OnEnable()
+        {
+            this.EventStartListening<GameEvent>();
+        }
+
+        private void OnDisable()
+        {
+            this.EventStopListening<GameEvent>();
+        }
+
         [System.Serializable]
         public class MovementSettings
         {
@@ -24,9 +44,6 @@ namespace Q3Movement
             }
         }
 
-        [Header("Aiming")]
-        [SerializeField] private Camera m_Camera;
-        [SerializeField] private MouseLook m_MouseLook = new MouseLook();
 
         [Header("Movement")]
         [SerializeField] private float m_Friction = 6;
@@ -47,7 +64,7 @@ namespace Q3Movement
 
         private CharacterController m_Character;
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
-        private Vector3 m_PlayerVelocity = Vector3.zero;
+        public Vector3 m_PlayerVelocity = Vector3.zero;
 
         
         
@@ -73,27 +90,20 @@ namespace Q3Movement
         private float m_PlayerFriction = 0;
 
         private Vector3 m_MoveInput;
-        private Transform m_Tran;
-        private Transform m_CamTran;
+        PlayerCameraController playerCameraController;
 
         private void Start()
         {
-            m_Tran = transform;
+            playerCameraController = GetComponent<PlayerCameraController>();
             m_Character = GetComponent<CharacterController>();
             height = m_Character.height/2 + m_Character.skinWidth;
             heightWithPadding = heightPadding + height;
-
-            if (!m_Camera)
-                m_Camera = Camera.main;
-
-            m_CamTran = m_Camera.transform;
-            m_MouseLook.Init(m_Tran, m_CamTran);
         }
 
         private void Update()
         {
             m_MoveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            m_MouseLook.UpdateCursorLock(); //Whether we show the cursor or not
+            playerCameraController.m_MouseLook.UpdateCursorLock(); //Whether we show the cursor or not
             QueueJump();
 
             //Checking For Slope
@@ -111,7 +121,7 @@ namespace Q3Movement
             }
 
             // Rotate the character and camera.
-            m_MouseLook.LookRotation(m_Tran, m_CamTran);
+            playerCameraController.m_MouseLook.LookRotation(playerCameraController.m_Tran, playerCameraController.m_CamTran);
 
             // Move the character.
             m_Character.Move(m_PlayerVelocity * Time.deltaTime);
@@ -125,7 +135,7 @@ namespace Q3Movement
             if(onSlope && m_Character.velocity.y <= 0)
             {
                 //Lerp the characters position
-                m_Tran.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hitInfo.point.y + height, transform.position.z), 100 * Time.deltaTime);
+                playerCameraController.m_Tran.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, hitInfo.point.y + height, transform.position.z), 100 * Time.deltaTime);
             }
         }
 
@@ -193,7 +203,7 @@ namespace Q3Movement
 
             var wishdir = new Vector3(mouseX, 0, Mathf.Clamp(m_MoveInput.z, -1, 0)); // Gets the mouse X inputs, zero the forward input
             
-            wishdir = m_Tran.TransformDirection(wishdir); // get the local to world space for the players current transform to the requested new position 
+            wishdir = playerCameraController.m_Tran.TransformDirection(wishdir); // get the local to world space for the players current transform to the requested new position 
             
             float wishspeed = wishdir.magnitude;
             wishspeed *= m_AirSettings.MaxSpeed;
@@ -286,7 +296,7 @@ namespace Q3Movement
             }
 
             var wishdir = new Vector3(m_MoveInput.x, 0, m_MoveInput.z);
-            wishdir = m_Tran.TransformDirection(wishdir);
+            wishdir = playerCameraController.m_Tran.TransformDirection(wishdir);
             wishdir.Normalize();
             m_MoveDirectionNorm = wishdir;
 
@@ -357,5 +367,6 @@ namespace Q3Movement
             m_PlayerVelocity.z += accelspeed * targetDir.z;
         }
 
+        
     }
 }
