@@ -17,5 +17,11 @@ namespace DebugTools
 			Physics.Raycast(rayOriginPoint, rayDirection, out hitInfo, rayDistance, mask);
 			return hitInfo;
 		}
+
+		public static Vector3 SphereOrCapsuleCastCenterOnCollision(Vector3 origin, Vector3 directionCast, float hitInfoDistance)
+		{
+			return origin + (directionCast.normalized * hitInfoDistance);
+		}
+
 	}
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public enum IPlayerStates
 {
-     AirBorn,
-     Grounded,
-     Swinging
+     AirMove,
+     GroundMove,
+     Grappling,
+     Dashing
 }
 
 

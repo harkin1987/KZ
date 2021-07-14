@@ -293,7 +293,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-4788
+  m_Name: pb_Mesh19820
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -681,7 +681,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-13334
+  m_Name: pb_Mesh19736
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1360,9 +1360,17 @@ MonoBehaviour:
   assetGuid: 
   m_Mesh: {fileID: 1633970966}
   m_IsSelectable: 1
-  m_SelectedFaces: 
-  m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedFaces: 01000000
+  m_SelectedEdges:
+  - a: 4
+    b: 5
+  - a: 6
+    b: 4
+  - a: 5
+    b: 7
+  - a: 7
+    b: 6
+  m_SelectedVertices: 04000000050000000600000007000000
 --- !u!4 &604578937
 Transform:
   m_ObjectHideFlags: 0
@@ -1371,7 +1379,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 604578932}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 17, z: 32}
+  m_LocalPosition: {x: 1, y: 17, z: 35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2848,6 +2856,7 @@ GameObject:
   - component: {fileID: 1441166907}
   - component: {fileID: 1441166911}
   - component: {fileID: 1441166914}
+  - component: {fileID: 1441166915}
   m_Layer: 0
   m_Name: Q3Player
   m_TagString: Untagged
@@ -3032,6 +3041,28 @@ MonoBehaviour:
     m_SmoothTime: 5
     m_LockCursor: 1
   m_Tran: {fileID: 0}
+--- !u!114 &1441166915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441166905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa25bbde78045a42a0e3c9ef3ffd7be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aAbilityKey: 102
+  aName: Dash
+  aSprite: {fileID: 0}
+  aSound: {fileID: 0}
+  aBaseCoolDown: 1
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  dashDistance: 20
+  dashSpeed: 30
 --- !u!1 &1457289742
 GameObject:
   m_ObjectHideFlags: 0
@@ -3164,7 +3195,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh19714
+  m_Name: pb_Mesh19716
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4054,7 +4085,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh19686
+  m_Name: pb_Mesh19688
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4311,7 +4342,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   gunTip: {fileID: 1416381764}
-  camera: {fileID: 608072920}
+  cam: {fileID: 608072920}
   player: {fileID: 1441166912}
   maxDistance: 100
 --- !u!120 &1729412933
@@ -4453,7 +4484,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh19794
+  m_Name: pb_Mesh19808
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

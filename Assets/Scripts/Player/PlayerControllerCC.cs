@@ -44,6 +44,8 @@ namespace PlayerMovement
             }
         }
 
+        //Player State Machine
+        private PlayerState myStateMachine;
 
         [Header("Movement")]
         [SerializeField] private float m_Friction = 6;
@@ -98,6 +100,7 @@ namespace PlayerMovement
             m_Character = GetComponent<CharacterController>();
             height = m_Character.height/2 + m_Character.skinWidth;
             heightWithPadding = heightPadding + height;
+            myStateMachine = GetComponent<PlayerState>();
         }
 
         private void Update()

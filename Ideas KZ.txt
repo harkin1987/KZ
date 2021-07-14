@@ -1,0 +1,2 @@
+- Sideways strafing bugs out
+- Grapple does not appear to work

@@ -9,7 +9,7 @@ public class GrapplingGun : MonoBehaviour
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
-    public Transform gunTip, camera, player;
+    public Transform gunTip, cam, player;
     public float maxDistance = 100f;
     private SpringJoint joint;
 
@@ -42,10 +42,10 @@ public class GrapplingGun : MonoBehaviour
     void StartGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(camera.position, camera.forward, out hit, maxDistance, whatIsGrappleable))
+        if (Physics.Raycast(cam.position, cam.forward, out hit, maxDistance, whatIsGrappleable))
         {
             
-            EventManager.TriggerEvent(new GameEvent("GrappleStart"));
+            EventManager.TriggerEvent(new GameEvent("GrappleStart", IPlayerStates.Grappling));
             
             grapplePoint = hit.point;
             joint = player.gameObject.AddComponent<SpringJoint>();
@@ -56,7 +56,7 @@ public class GrapplingGun : MonoBehaviour
 
             //The distance grapple will try to keep from grapple point. 
             joint.maxDistance = distanceFromPoint * 0.8f;
-            joint.minDistance = distanceFromPoint * 0.7f;
+            joint.minDistance = distanceFromPoint * 0.75f;
 
             //Adjust these values to fit your game.
             joint.spring = 50f;
@@ -76,7 +76,7 @@ public class GrapplingGun : MonoBehaviour
     void StopGrapple()
     {
         
-        EventManager.TriggerEvent(new GameEvent("GrappleEnd"));
+        EventManager.TriggerEvent(new GameEvent("GrappleEnd", IPlayerStates.AirMove));
         lr.positionCount = 0;
         Destroy(joint);
     }

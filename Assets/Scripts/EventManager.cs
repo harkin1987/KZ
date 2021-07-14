@@ -3,14 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Event List:
+/// PlayerStateChange
+/// </summary>
+
 namespace Tools
 {
 	public struct GameEvent
 	{
 		// Start is called before the first frame update
 		public string EventName;
-		public GameEvent(string newName)
+		public IPlayerStates playerState;
+		public GameEvent(string newName, IPlayerStates newPlayerState)
 		{
+			playerState = newPlayerState;
 			EventName = newName;
 		}
 	}
