@@ -50,6 +50,7 @@ namespace PlayerMovement
         [Header("Movement")]
         [SerializeField] private float m_Friction = 6;
         [SerializeField] private float m_Gravity = 20;
+        private float savedGravity;
         [SerializeField] private float m_JumpForce = 8;
         [Tooltip("Automatically jump when holding jump button")]
         [SerializeField] private bool m_AutoBunnyHop = false;
@@ -71,7 +72,7 @@ namespace PlayerMovement
         
         
         private float height;
-
+        
         [Header("Slope Handling")]
         private float heightWithPadding;
         private RaycastHit hitInfo;
@@ -101,6 +102,7 @@ namespace PlayerMovement
             height = m_Character.height/2 + m_Character.skinWidth;
             heightWithPadding = heightPadding + height;
             myStateMachine = GetComponent<PlayerState>();
+            savedGravity = m_Gravity;
         }
 
         private void Update()
@@ -187,6 +189,15 @@ namespace PlayerMovement
         }
 
         
+        public void DisableGravity()
+        {
+            m_Gravity = 0;
+        }
+
+        public void EnableGravity()
+        {
+            m_Gravity = savedGravity;
+        }
 
         // Handle air movement.
         private void AirMove()

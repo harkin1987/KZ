@@ -8,6 +8,7 @@ public class PlayerControllerRB : MonoBehaviour
     //Assingables
     public Transform playerCam;
     public Transform orientation;
+    public float maxSpeedAir = 200f; 
 
     //Other
     private Rigidbody rb;
@@ -61,7 +62,10 @@ public class PlayerControllerRB : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
     }
 
     private void Update()

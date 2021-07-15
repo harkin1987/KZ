@@ -10,7 +10,6 @@ public class AbilityDash : Ability
     public float dashDistance = 10f;
     public float dashSpeed = 50f;
     Vector3 endPoint;
-    Vector3 savedVelocity;
 
     public override void Initialize()
     {
@@ -19,9 +18,12 @@ public class AbilityDash : Ability
 
     public override void TriggerAbility()
     {
-        Debug.LogError("Triggered Dash ability");
+        
+        
         if(Time.time > aLastStartTime + aBaseCoolDown) // We can trigger this ability
         {
+            base.TriggerAbility();
+            Debug.LogError("Triggered Dash ability");
             aLastStartTime = Time.time;
             StartDash();
         }
@@ -29,19 +31,21 @@ public class AbilityDash : Ability
 
     public override void StopAbility()
     {
+        aPlayerCharCont.EnableGravity();
         aExectuting = false;
     }
 
     void StartDash()
     {
         //Raycast dash distance ahead and see if we hit anything
-        Vector3 endCastPoint = transform.position + (aPlayerCameraController.m_CamTran.forward * dashDistance);
-        Vector3 originPoint = aPlayerCameraController.m_CamTran.position;
-        Vector3 p1 = aPlayerCameraController.m_CamTran.position + cC.center + Vector3.up * -cC.height * 0.5F;
-        Vector3 p2 = p1 + Vector3.up * cC.height;
+        Vector3 endCastPoint = transform.position + (aPlayerCam.m_CamTran.forward * dashDistance);
+        Vector3 originPoint = aPlayerCam.m_CamTran.position;
+        Vector3 p1 = transform.position + cC.center + Vector3.down * ((cC.height +  cC.skinWidth) * 0.5F);
+        Vector3 p2 = transform.position + cC.center + Vector3.up * ((cC.height + cC.skinWidth) * 0.5F);
 
         RaycastHit hit;
-        Physics.CapsuleCast(p1, p2, cC.radius, aPlayerCameraController.m_CamTran.forward, out hit, dashDistance);
+        //public static bool CapsuleCast(Vector3 point1, Vector3 point2, float radius, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
+        Physics.CapsuleCast(p1, p2, (cC.radius + cC.skinWidth), aPlayerCam.m_CamTran.forward, out hit, dashDistance);
         if (hit.collider)
         {
             Debug.LogError("We hit at point " + hit.point);
@@ -49,35 +53,57 @@ public class AbilityDash : Ability
         }
         else
         {
-            endPoint = transform.position + (aPlayerCameraController.m_CamTran.forward * dashDistance);
+            Debug.Log("Cast Returned null");
+            Vector3 normCamForward = Vector3.Normalize(aPlayerCam.m_CamTran.forward);
+            endPoint = transform.position + (normCamForward * dashDistance);
+            RenderVolume(endPoint);
         }
-        savedVelocity = cC.velocity;
+        aPlayerCharCont.DisableGravity();
         aExectuting = true;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(endPoint, 1f);
+    }
+
+ 
+
+
     void Update()
     {
-
         if (Input.GetKeyDown(aAbilityKey))
         {
             TriggerAbility();
         }
-        if(aExectuting)
+        if (aExectuting)
             Dash();
     }
 
     private void Dash()
     {
-        float distance = Vector3.Distance(endPoint, transform.position);
-        var offset = endPoint - transform.position;
-        if (distance > 2f)
+        if (aExectuting)
         {
-            offset = offset.normalized * dashSpeed;
-            cC.Move(offset * Time.deltaTime);
-        }
-        else
-        {
-            StopAbility();
+            float distance = Vector3.Distance(endPoint, transform.position);
+            var offset = endPoint - transform.position;
+            if (distance > 2f)
+            {
+                offset = offset.normalized * dashSpeed;
+                cC.Move(offset * Time.deltaTime);
+            }
+            else
+            {
+                StopAbility();
+            }
         }
     }
+
+    void RenderVolume(Vector3 location)
+    {
+        shape.position = location;
+        shape.GetComponent<Renderer>().enabled = true; // show it
+    }
+
+    public Transform shape;
+
 }
