@@ -46,6 +46,7 @@ namespace PlayerMovement
             GUI.Box(new Rect(0, 0, 400, 160),
                 "FPS: " + m_FPS + "\n" +
                 "Speed: " + Mathf.Round(m_Player.Speed * 100) / 100 + " (ups)\n" +
+                "Strafing: " + m_Player.strafing + "\n" +
                 "Top: " + Mathf.Round(m_TopSpeed * 100) / 100 + " (ups)\n" + 
                 "Horizontal Raw: " + Input.GetAxisRaw("Horizontal") + "\n" +
                 "Vertical Raw: " + Input.GetAxisRaw("Vertical") + "\n" +

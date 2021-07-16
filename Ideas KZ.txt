@@ -1,3 +1,6 @@
 - Sideways strafing bugs out
 - Grapple does not appear to work
 - Re-factor Enable Disable Gravity in both character controllers
+- Grapple through walls
+- Dash stops dead at end
+- Turing too fast fucks with the air strafe

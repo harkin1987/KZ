@@ -23,7 +23,6 @@ public class AbilityDash : Ability
         if(Time.time > aLastStartTime + aBaseCoolDown) // We can trigger this ability
         {
             base.TriggerAbility();
-            Debug.LogError("Triggered Dash ability");
             aLastStartTime = Time.time;
             StartDash();
         }
@@ -48,12 +47,10 @@ public class AbilityDash : Ability
         Physics.CapsuleCast(p1, p2, (cC.radius + cC.skinWidth), aPlayerCam.m_CamTran.forward, out hit, dashDistance);
         if (hit.collider)
         {
-            Debug.LogError("We hit at point " + hit.point);
             endPoint = hit.point;
         }
         else
         {
-            Debug.Log("Cast Returned null");
             Vector3 normCamForward = Vector3.Normalize(aPlayerCam.m_CamTran.forward);
             endPoint = transform.position + (normCamForward * dashDistance);
             RenderVolume(endPoint);

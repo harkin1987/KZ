@@ -68,11 +68,10 @@ namespace PlayerMovement
         private CharacterController m_Character;
         private Vector3 m_MoveDirectionNorm = Vector3.zero;
         public Vector3 m_PlayerVelocity = Vector3.zero;
-
-        
         
         private float height;
-        
+        public bool strafing = false;
+
         [Header("Slope Handling")]
         private float heightWithPadding;
         private RaycastHit hitInfo;
@@ -187,8 +186,7 @@ namespace PlayerMovement
                 m_JumpQueued = false;
             }
         }
-
-        
+                
         public void DisableGravity()
         {
             m_Gravity = 0;
@@ -204,18 +202,19 @@ namespace PlayerMovement
         {
             float accel;
             float mouseX = Input.GetAxis("Mouse X");
-            if(mouseX != 0)
+            float mouseXAbs = Input.GetAxis("Mouse X");
+            if (mouseXAbs != 0)
             {
-                if (mouseX > 0.02f)
-                    mouseX = 1;
-                else if (mouseX < -0.02f)
-                    mouseX = -1;
+                if (mouseXAbs > 0.02f)
+                    mouseXAbs = 1;
+                else if (mouseXAbs < -0.02f)
+                    mouseXAbs = -1;
                 else
-                    mouseX = 0;
+                    mouseXAbs = 0;
             }
             //var wishdir = new Vector3(m_MoveInput.x, 0, m_MoveInput.z); 
 
-            var wishdir = new Vector3(mouseX, 0, Mathf.Clamp(m_MoveInput.z, -1, 0)); // Gets the mouse X inputs, zero the forward input
+            var wishdir = new Vector3(mouseX, 0, Mathf.Clamp(m_MoveInput.z, -1, 0)); // Gets the mouse X inputs, zero the forward input. Clamp is there to ignore players forward input
             
             wishdir = playerCameraController.m_Tran.TransformDirection(wishdir); // get the local to world space for the players current transform to the requested new position 
             
@@ -238,7 +237,8 @@ namespace PlayerMovement
 
             // If the player is ONLY strafing left or right 
             // Disabled to make air strafing automatic
-            if (true/*m_MoveInput.z == 0 && m_MoveInput.x != 0*/)
+            // /*m_MoveInput.z == 0 && m_MoveInput.x != 0*/
+            if (true)
             {
                 if (wishspeed > m_StrafeSettings.MaxSpeed)
                 {
@@ -258,18 +258,17 @@ namespace PlayerMovement
             // Apply gravity
             m_PlayerVelocity.y -= m_Gravity * Time.deltaTime;
         }
-
-        // Air control occurs when the player is in the air, it allows players to move side 
-        // to side much faster rather than being 'sluggish' when it comes to cornering.
+             
         private void AirControl(Vector3 targetDir /*wishDir*/, float targetSpeed)
         {
             // Only control air movement when moving backward
             
             if (Mathf.Abs(m_MoveInput.z) < 0.001 || Mathf.Abs(targetSpeed) < 0.001 || m_MoveInput.z > 0)
             {
+                strafing = false;
                 return;
             }
-
+            strafing = true;
             float zSpeed = m_PlayerVelocity.y;
             m_PlayerVelocity.y = 0;
             /* Next two lines are equivalent to idTech's VectorNormalize() */

@@ -15,6 +15,7 @@ public class AbilityGrapple : Ability
     public float maxDistanceFromJoint = 0.8f;
     [Header("GrappleValues")]
     public LayerMask whatIsGrappleable;
+    public LayerMask whatIsShouldBlockCasting;
     public Transform gunTip, cam, player;
     public float grappleDistance = 50f;
     public LineRenderer lr;
@@ -86,8 +87,19 @@ public class AbilityGrapple : Ability
     void StartGrapple()
     {
         RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, grappleDistance, whatIsGrappleable))
+        RaycastHit interferenceHit;
+        float radius = 1f;
+        //Switched to SphereCast
+        //Physics.Raycast(cam.position, cam.forward, out hit, grappleDistance, whatIsGrappleable)
+        if (Physics.SphereCast(transform.position, radius, cam.forward, out interferenceHit, grappleDistance, whatIsShouldBlockCasting))
         {
+            Debug.Log("Interference hit, cancelling grapple");
+            return;
+        }
+            
+        if (Physics.SphereCast(cam.position, radius, cam.forward, out hit, grappleDistance, whatIsGrappleable))
+        {
+
             aExectuting = true;
             aRB.useGravity = false;
             EventManager.TriggerEvent(new GameEvent("GrappleStart", IPlayerStates.Grappling));
