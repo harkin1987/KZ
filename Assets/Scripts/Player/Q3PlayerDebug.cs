@@ -22,6 +22,15 @@ namespace PlayerMovement
             m_Player = GetComponent<PlayerControllerCC>();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Debug.LogError("Around here we de-cellerated");
+                Debug.Break();
+            }
+        }
+
         private void LateUpdate()
         {
             // Calculate frames-per-second.

@@ -216,17 +216,23 @@ namespace PlayerMovement
 
             var wishdir = new Vector3(mouseX, 0, Mathf.Clamp(m_MoveInput.z, -1, 0)); // Gets the mouse X inputs, zero the forward input. Clamp is there to ignore players forward input
             
-            wishdir = playerCameraController.m_Tran.TransformDirection(wishdir); // get the local to world space for the players current transform to the requested new position 
+            wishdir = playerCameraController.m_Tran.TransformDirection(wishdir); // get the local to world space relative to the camera
             
-            float wishspeed = wishdir.magnitude;
-            wishspeed *= m_AirSettings.MaxSpeed;
+            float wishspeed = wishdir.magnitude; // Pythagoras a2 + b2 = mag2 - Will always be greater than either z or x input
+            wishspeed *= m_AirSettings.MaxSpeed; // Multiply magnitude by max speed - this will give a percentage of accel/deccel to be applied
+            
+            wishdir.Normalize(); // Normalize the direction vector3
+            
+            m_MoveDirectionNorm = wishdir; // Set move direction norm 
+            Debug.Log($"Wishdir normalized = {m_MoveDirectionNorm}");
 
-            wishdir.Normalize();
-            m_MoveDirectionNorm = wishdir;
+            // At this point we have
+            // 1. Direction we wish to go relative to the camera - wishdir
+            // 2. The speed we should be going at relative to the magnitude - wish speed
 
             // CPM Air control.
             float wishspeed2 = wishspeed;
-            if (Vector3.Dot(m_PlayerVelocity, wishdir) < 0)
+            if (Vector3.Dot(m_PlayerVelocity, wishdir) < 0) // If we are pointing in the opposite direction deccel
             {
                 accel = m_AirSettings.Deceleration;
             }
@@ -238,16 +244,19 @@ namespace PlayerMovement
             // If the player is ONLY strafing left or right 
             // Disabled to make air strafing automatic
             // /*m_MoveInput.z == 0 && m_MoveInput.x != 0*/
+            Debug.Log("Wish speed = " + wishspeed);
             if (true)
             {
                 if (wishspeed > m_StrafeSettings.MaxSpeed)
                 {
+                    Debug.Log("Setting max speed to 1");
                     wishspeed = m_StrafeSettings.MaxSpeed;
                 }
 
                 accel = m_StrafeSettings.Acceleration;
             }
-
+            Debug.Log($"Accelerating with inputs: Wishdir: {wishdir} WishSpeed: {wishspeed} Accel: {accel} Current Speed: {m_PlayerVelocity}");
+            Debug.Log($"Speed {Mathf.Round(Speed * 100) / 100}");
             Accelerate(wishdir, wishspeed, accel);
             
             if (m_AirControl > 0)
