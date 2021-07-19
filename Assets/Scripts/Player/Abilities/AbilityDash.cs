@@ -18,8 +18,6 @@ public class AbilityDash : Ability
 
     public override void TriggerAbility()
     {
-        
-        
         if(Time.time > aLastStartTime + aBaseCoolDown) // We can trigger this ability
         {
             base.TriggerAbility();
@@ -31,6 +29,7 @@ public class AbilityDash : Ability
     public override void StopAbility()
     {
         aPlayerCharCont.EnableGravity();
+        aPlayerCharCont.SwitchActiveLayer(PlayerMovement.PlayerControllerCC.layers.Default);
         aExectuting = false;
     }
 
@@ -44,7 +43,7 @@ public class AbilityDash : Ability
 
         RaycastHit hit;
         //public static bool CapsuleCast(Vector3 point1, Vector3 point2, float radius, Vector3 direction, out RaycastHit hitInfo, float maxDistance);
-        Physics.CapsuleCast(p1, p2, (cC.radius + cC.skinWidth), aPlayerCam.m_CamTran.forward, out hit, dashDistance);
+        Physics.CapsuleCast(p1, p2, (cC.radius + cC.skinWidth), aPlayerCam.m_CamTran.forward, out hit, dashDistance, hitLayerMask);
         if (hit.collider)
         {
             endPoint = hit.point;
@@ -56,6 +55,7 @@ public class AbilityDash : Ability
             RenderVolume(endPoint);
         }
         aPlayerCharCont.DisableGravity();
+        aPlayerCharCont.SwitchActiveLayer(PlayerMovement.PlayerControllerCC.layers.Dashing);
         aExectuting = true;
     }
 

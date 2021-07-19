@@ -19,6 +19,12 @@ namespace PlayerMovement
             //Nothing currently
         }
 
+        public enum layers
+        {
+            Default,
+            Dashing
+        }
+
         private void OnEnable()
         {
             this.EventStartListening<GameEvent>();
@@ -76,7 +82,9 @@ namespace PlayerMovement
         private float heightWithPadding;
         private RaycastHit hitInfo;
         [SerializeField] private float heightPadding;
-        [SerializeField] private LayerMask ground;
+        [SerializeField] private LayerMask groundLayer;
+        [SerializeField] private LayerMask dashingLayer;
+        [SerializeField] private LayerMask playerLayer;
         [HideInInspector] public bool onSlope;
         [HideInInspector] public float groundAngle;
         [HideInInspector] public bool grounded;
@@ -146,7 +154,7 @@ namespace PlayerMovement
         private void CheckGround()
         {
             //if(Physics.Raycast(transform.position, -Vector3.up, out hitInfo, height, ground))
-            hitInfo = DebugRayCast(transform.position, -Vector3.up, heightWithPadding, ground, Color.blue, drawDebugCast);
+            hitInfo = DebugRayCast(transform.position, -Vector3.up, heightWithPadding, groundLayer, Color.blue, drawDebugCast);
             if (hitInfo.collider != null)
             {
                 grounded = true; 
@@ -224,7 +232,7 @@ namespace PlayerMovement
             wishdir.Normalize(); // Normalize the direction vector3
             
             m_MoveDirectionNorm = wishdir; // Set move direction norm 
-            Debug.Log($"Wishdir normalized = {m_MoveDirectionNorm}");
+            //Debug.Log($"Wishdir normalized = {m_MoveDirectionNorm}");
 
             // At this point we have
             // 1. Direction we wish to go relative to the camera - wishdir
@@ -244,19 +252,19 @@ namespace PlayerMovement
             // If the player is ONLY strafing left or right 
             // Disabled to make air strafing automatic
             // /*m_MoveInput.z == 0 && m_MoveInput.x != 0*/
-            Debug.Log("Wish speed = " + wishspeed);
+            //Debug.Log("Wish speed = " + wishspeed);
             if (true)
             {
                 if (wishspeed > m_StrafeSettings.MaxSpeed)
                 {
-                    Debug.Log("Setting max speed to 1");
+                    //Debug.Log("Setting max speed to 1");
                     wishspeed = m_StrafeSettings.MaxSpeed;
                 }
 
                 accel = m_StrafeSettings.Acceleration;
             }
-            Debug.Log($"Accelerating with inputs: Wishdir: {wishdir} WishSpeed: {wishspeed} Accel: {accel} Current Speed: {m_PlayerVelocity}");
-            Debug.Log($"Speed {Mathf.Round(Speed * 100) / 100}");
+            //Debug.Log($"Accelerating with inputs: Wishdir: {wishdir} WishSpeed: {wishspeed} Accel: {accel} Current Speed: {m_PlayerVelocity}");
+            //Debug.Log($"Speed {Mathf.Round(Speed * 100) / 100}");
             Accelerate(wishdir, wishspeed, accel);
             
             if (m_AirControl > 0)
@@ -389,6 +397,23 @@ namespace PlayerMovement
             m_PlayerVelocity.z += accelspeed * targetDir.z;
         }
 
-        
+        public void SwitchActiveLayer(layers targetLayer)
+        {
+            //Debug.Log("Switching layer to: " + targetLayer);
+            switch (targetLayer)
+            {
+                case layers.Dashing:
+                    gameObject.layer = ToLayer(dashingLayer);
+                    break;
+                case layers.Default:
+                    gameObject.layer = ToLayer(playerLayer);
+                    break;
+            }
+
+        }
+
+
     }
+
+    
 }
