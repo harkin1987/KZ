@@ -3,4 +3,4 @@
 - Re-factor Enable Disable Gravity in both character controllers
 - Grapple through walls
 - Dash stops dead at end
-- Turing too fast fucks with the air strafe
+- Turing too fast during AirMove() slows character controller
